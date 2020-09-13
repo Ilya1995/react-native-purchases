@@ -2,7 +2,7 @@ import React from 'react'
 import AppNavigator from './src/AppNavigator'
 import {LogBox} from 'react-native'
 
-LogBox.ignoreLogs(['Warning: ...'])
+// LogBox.ignoreLogs(['Warning: ...'])
 
 const App = () => (
   <>

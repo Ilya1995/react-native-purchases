@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "753970111182",
+    "firebase_url": "https://todos-c16da.firebaseio.com",
+    "project_id": "todos-c16da",
+    "storage_bucket": "todos-c16da.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:753970111182:android:08593537ce9f47ade1a69f",
+        "android_client_info": {
+          "package_name": "com.purchases"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "753970111182-fbabppdfa36tc95dqvpq77691uh19t7h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5pmSz3Qqpo1ne-WZBmACLyFBQfO09ot8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "753970111182-fbabppdfa36tc95dqvpq77691uh19t7h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
