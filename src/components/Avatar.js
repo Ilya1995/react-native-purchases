@@ -1,22 +1,32 @@
 import React from 'react'
 import {StyleSheet, View, Image} from 'react-native'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
-const Avatar = ({gender}) => {
-  let icon
-  switch (gender) {
-    case 'male':
-      icon = require('../../assets/icons/male.png')
-      break
-    case 'female':
-      icon = require('../../assets/icons/female.png')
-      break
+const Avatar = ({gender, completed}) => {
+  // console.log(completed)
+  const icon = gender === 'male' ? require('../../assets/icons/male.png') : require('../../assets/icons/female.png')
 
-    default:
-      break
-  }
   return (
-    <View style={styles.container}>
-      <Image style={styles.img} source={icon} />
+    <View style={[styles.container, completed && {borderWidth: 0}]}>
+      <Image style={completed ? styles.imgFull : styles.img} source={icon} />
+      {completed && (
+        <View style={{position: 'absolute', height: 70, width: 70}}>
+          <View
+            style={{
+              position: 'absolute',
+              height: 70,
+              width: 70,
+              zIndex: 2,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <MaterialCommunityIcons name="check" color={'#FFFFFF'} size={30} />
+          </View>
+          <View
+            style={{position: 'absolute', height: 70, width: 70, zIndex: 1, backgroundColor: '#7DC02A', opacity: 0.8}}
+          />
+        </View>
+      )}
     </View>
   )
 }
@@ -26,16 +36,19 @@ const styles = StyleSheet.create({
     height: 70,
     width: 70,
     borderRadius: 40,
-    backgroundColor: '#808080',
-    borderColor: '#FFFFFF',
-    borderWidth: 4,
+    borderColor: '#3C72D5',
+    borderWidth: 3,
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
   },
   img: {
-    height: 62,
-    width: 62,
+    height: 65,
+    width: 65,
+  },
+  imgFull: {
+    height: 70,
+    width: 70,
   },
 })
 
