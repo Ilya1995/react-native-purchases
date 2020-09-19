@@ -1,8 +1,12 @@
 import React, {useRef, useEffect, useState} from 'react'
-import {StyleSheet, View, Text, TouchableOpacity, FlatList, Animated} from 'react-native'
+import {StyleSheet, View, Text, TouchableOpacity, FlatList, Animated, Dimensions} from 'react-native'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 import Avatar from '../components/Avatar'
 import database from '@react-native-firebase/database'
+
+const SCREEN_WIDTH = Dimensions.get('window').width
+const NOW = new Date()
+const TODAY = new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate()).valueOf()
 
 // const a = [
 //   {completed: true, text: 'Купить хлеб', timestamp: 121212, gender: 'female'},
@@ -18,7 +22,11 @@ const Home = ({navigation}) => {
       .ref('purchases')
       .on('value', (snapshot) => {
         console.log('Purchases data: ', Object.values(snapshot.val()))
-        setPurchases(Object.values(snapshot.val()))
+        // setPurchases(Object.values(snapshot.val()))
+        const a = Object.values(snapshot.val()).map((el) => {
+          return {...el, date: new Date('2019-10-02')}
+        })
+        setPurchases(a)
       })
 
     return () => database().ref('purchases').off('value', onValueChange)
@@ -55,6 +63,22 @@ const Home = ({navigation}) => {
     return <View style={styles.leftAction}></View>
   }
 
+  const addZero = (value) => {
+    if (value.toString().length < 2) return '0' + value
+    return value
+  }
+
+  const getDate = (value) => {
+    const other = value.valueOf()
+    if (other < TODAY - 864e5) {
+      return `${addZero(value.getDate())}.${addZero(value.getMonth() + 1)}.${value.getFullYear()}`
+    } else if (other < TODAY) {
+      return 'вчера'
+    } else {
+      return `${addZero(value.getHours())}:${addZero(value.getMinutes())}`
+    }
+  }
+
   return (
     <View style={{flex: 1, backgroundColor: '#F5F5F5'}}>
       <TouchableOpacity onPress={() => navigation.navigate('Login')}>
@@ -73,16 +97,37 @@ const Home = ({navigation}) => {
               friction={2}
               rightThreshold={40}
               renderRightActions={renderRightActions}
-              renderLeftActions={renderLeftActions}
-              containerStyle={{marginBottom: 10}}>
+              renderLeftActions={renderLeftActions}>
               <View style={{backgroundColor: '#FFFFFF'}}>
-                <View style={{paddingHorizontal: 16, paddingVertical: 6, flexDirection: 'row'}}>
+                <View
+                  style={{
+                    paddingVertical: 6,
+                    paddingHorizontal: 16,
+                    flexDirection: 'row',
+                    justifyContent: 'flex-start',
+                  }}>
                   <Avatar gender={item.gender} />
-                  <Text style={{color: '#1C1C1E', letterSpacing: 0.87, fontSize: 28, fontWeight: '600'}}>
-                    {item.text}
-                  </Text>
+
+                  <View style={{flexGrow: 1, marginLeft: 16, width: SCREEN_WIDTH - 118}}>
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                      <Text style={{fontSize: 17, fontWeight: '600', color: '#1C1C1E'}}>Юлька хочет</Text>
+
+                      <Text style={{fontSize: 15, color: '#8C8C8C'}}>{getDate(item.date)}</Text>
+                    </View>
+                    <Text
+                      numberOfLines={2}
+                      style={{
+                        color: '#8C8C8C',
+                        letterSpacing: -0.408,
+                        fontSize: 17,
+                        fontWeight: '600',
+                        flexWrap: 'wrap',
+                      }}>
+                      {item.text}
+                    </Text>
+                  </View>
                 </View>
-                <View style={{borderBottomColor: '#1C1C1E', borderBottomWidth: 1, width: '100%'}} />
+                <View style={{borderBottomColor: '#8C8C8C', marginLeft: 102, borderBottomWidth: 0.5}} />
               </View>
             </Swipeable>
           )}
