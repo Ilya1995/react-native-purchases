@@ -3,23 +3,27 @@ import {StyleSheet, View, Text, TouchableOpacity, Animated} from 'react-native'
 import ListItem from '../components/ListItem'
 import database from '@react-native-firebase/database'
 
-const Home = ({navigation}) => {
+const Home = ({navigation, route}) => {
   const [purchases, setPurchases] = useState([])
   const [users, setUsers] = useState([])
 
   const [todos, setTodos] = useState([])
   const scrollY = useRef(new Animated.Value(0)).current
 
+  const {brief, descr} = route.params
+
+  console.log(555, brief, descr)
+
   useEffect(() => {
     const onValueChange = database()
-      .ref('purchases')
+      .ref(brief)
       .on('value', (snapshot) => {
         // console.log('Purchases data: ', Object.values(snapshot.val()))
         const a = Object.entries(snapshot.val()).map(([key, value]) => ({...value, key}))
         setPurchases(a)
       })
 
-    return () => database().ref('purchases').off('value', onValueChange)
+    return () => database().ref(brief).off('value', onValueChange)
   }, [])
 
   useEffect(() => {
@@ -39,19 +43,19 @@ const Home = ({navigation}) => {
         const user = users.find(({id}) => id === userId)
         return {...rest, user: {name: user.name, gender: user.gender}}
       })
-      console.log(111, merge)
+      // console.log(111, merge)
       setTodos(merge)
     }
   }, [purchases, users])
 
   const removeItem = (key) => {
-    console.log(key)
-    database().ref(`/purchases/${key}`).remove()
+    // console.log(key)
+    database().ref(`/${brief}/${key}`).remove()
   }
 
   const updateItem = (key, value) => {
-    console.log(value)
-    database().ref(`/purchases/${key}`).update({completed: value})
+    // console.log(value)
+    database().ref(`/${brief}/${key}`).update({completed: value})
   }
 
   const opacity = scrollY.interpolate({
@@ -68,7 +72,7 @@ const Home = ({navigation}) => {
       </TouchableOpacity> */}
       <View style={{backgroundColor: '#FFFFFF', height: 50}}>
         <View style={styles.popUpTitle}>
-          <Animated.Text style={[styles.smallTitle, {opacity}]}>Покупки</Animated.Text>
+          <Animated.Text style={[styles.smallTitle, {opacity}]}>{descr}</Animated.Text>
         </View>
       </View>
 
@@ -77,7 +81,7 @@ const Home = ({navigation}) => {
           style={{height: '100%'}}
           onScroll={Animated.event([{nativeEvent: {contentOffset: {y: scrollY}}}], {useNativeDriver: false})}
           scrollEventThrottle={16}>
-          <Text style={styles.bigTitle}>Покупки</Text>
+          <Text style={styles.bigTitle}>{descr}</Text>
           {todos.map((item) => (
             <ListItem key={item.key} item={item} removeItem={removeItem} updateItem={updateItem} />
           ))}
@@ -109,7 +113,6 @@ const styles = StyleSheet.create({
     letterSpacing: 0.87,
     fontSize: 28,
     fontWeight: 'bold',
-    height: 33,
     paddingHorizontal: 16,
     marginBottom: 24,
   },

@@ -39,7 +39,7 @@ const ListItem = ({item, removeItem, updateItem}) => {
   }
 
   const update = () => {
-    console.log(updateRef.current._reactInternalFiber.memoizedState.rowState)
+    console.log(2222, updateRef.current._reactInternalFiber.memoizedState.rowState)
     // updateItem(item.key, !item.completed)
     // updateRef.current.close()
   }
@@ -127,7 +127,7 @@ const ListItem = ({item, removeItem, updateItem}) => {
 
                   <View>
                     <Text style={{fontSize: 15, color: '#8C8C8C'}}>{getDate(item.timestamp)}</Text>
-                    <View style={{borderBottomColor: item.completed ? '#7DC02A' : '#3C72D5', borderBottomWidth: 1}} />
+                    <View style={{borderBottomColor: item.completed ? '#7DC02A' : '#2A90BA', borderBottomWidth: 1}} />
                   </View>
                 </View>
                 <Text
@@ -155,11 +155,6 @@ const ListItem = ({item, removeItem, updateItem}) => {
 
 const styles = StyleSheet.create({
   leftAction: {
-    // flex: 1,
-    // justifyContent: 'flex-end',
-    // alignItems: 'center',
-    // flexDirection: 'row-reverse',
-
     backgroundColor: '#388e3c',
     alignItems: 'center',
     justifyContent: 'center',
