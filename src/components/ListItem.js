@@ -78,22 +78,22 @@ const ListItem = ({item, removeItem, updateItem}) => {
 
   const a1 = () => {
     console.log(7878)
-    Animated.timing(b2, {toValue: 1.01, duration: 500, useNativeDriver: false}).start()
+    // Animated.timing(b2, {toValue: 1.01, duration: 500, useNativeDriver: false}).start()
     Animated.timing(borderRadius, {toValue: 10, duration: 300, useNativeDriver: false}).start()
   }
 
   const a2 = () => {
     console.log(5565)
-    Animated.timing(b2, {toValue: 1, duration: 500, useNativeDriver: false}).start()
+    // Animated.timing(b2, {toValue: 1, duration: 500, useNativeDriver: false}).start()
     Animated.timing(borderRadius, {toValue: 0, duration: 300, useNativeDriver: false}).start()
   }
 
   return (
     <Animated.View
       // onLayout={({nativeEvent}) => console.log(nativeEvent.layout.height)}
-      style={{height, transform: [{scale: b2}]}}
+      style={{height}}
       onMoveShouldSetResponderCapture={() => true}
-      // onResponderRelease={() => console.log(333)}
+      // onResponderMove={(event) => console.log(event.nativeEvent.locationX)}
       // onResponderTerminate={() => console.log(444)}
       onResponderGrant={() => a1()}>
       {/* <TouchableOpacity

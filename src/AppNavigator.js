@@ -8,13 +8,12 @@ import Home from './screens/Home'
 import Login from './screens/Login'
 
 const RootStack = createStackNavigator()
-const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
 
 function mainTabs() {
   return (
     <Tab.Navigator
-      initialRouteName="Assessment"
+      initialRouteName="Purchases"
       tabBarOptions={{
         activeTintColor: '#2A90BA',
         inactiveTintColor: '#999999',
@@ -30,16 +29,16 @@ function mainTabs() {
         },
       }}>
       <Tab.Screen
-        name="Assessment"
+        name="Purchases"
         component={Home}
         initialParams={{descr: 'Покупки', brief: 'purchases'}}
         options={{
-          tabBarLabel: 'Оценка',
+          tabBarLabel: 'Покупки',
           tabBarIcon: ({color, size}) => <MaterialCommunityIcons name="cart-outline" color={color} size={size} />,
         }}
       />
       <Tab.Screen
-        name="Assessment1"
+        name="Others"
         component={Home}
         initialParams={{descr: 'Другое', brief: 'others'}}
         options={{

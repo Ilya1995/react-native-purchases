@@ -1,14 +1,18 @@
 import React, {useRef, useEffect, useState} from 'react'
 import {StyleSheet, View, Text, TouchableOpacity, Animated} from 'react-native'
 import ListItem from '../components/ListItem'
+import Skeleton from '../components/Skeleton'
 import database from '@react-native-firebase/database'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const Home = ({navigation, route}) => {
   const [purchases, setPurchases] = useState([])
   const [users, setUsers] = useState([])
 
   const [todos, setTodos] = useState([])
+  const preScrollY = useRef(0)
   const scrollY = useRef(new Animated.Value(0)).current
+  const hideBtn = useRef(new Animated.Value(1)).current
 
   const {brief, descr} = route.params
 
@@ -58,11 +62,36 @@ const Home = ({navigation, route}) => {
     database().ref(`/${brief}/${key}`).update({completed: value})
   }
 
+  const listenerScrollY = (event) => {
+    const offsetY = event.nativeEvent.contentOffset.y
+    const preY = preScrollY.current
+    preScrollY.current = offsetY
+    // console.log(opacityBtn)
+
+    if (preY < offsetY && offsetY > 10 && hideBtn.__getValue() === 1) {
+      // console.log(111, preY, offsetY, hideBtn.__getValue())
+
+      // return hideBtn.setValue(0)
+      return Animated.timing(hideBtn, {duration: 200, toValue: 0, useNativeDriver: false}).start()
+    }
+
+    if (preY > offsetY && !hideBtn.__getValue()) {
+      // console.log(222)
+      // return hideBtn.setValue(1)
+      return Animated.timing(hideBtn, {duration: 200, toValue: 1, useNativeDriver: false}).start()
+    }
+  }
+
   const opacity = scrollY.interpolate({
     inputRange: [35, 40],
     outputRange: [0, 1],
     extrapolate: 'clamp',
     useNativeDriver: false,
+  })
+
+  const trans = hideBtn.interpolate({
+    inputRange: [0, 1],
+    outputRange: [100, 0],
   })
 
   return (
@@ -78,14 +107,36 @@ const Home = ({navigation, route}) => {
 
       <View style={styles.slide1}>
         <Animated.ScrollView
-          style={{height: '100%'}}
-          onScroll={Animated.event([{nativeEvent: {contentOffset: {y: scrollY}}}], {useNativeDriver: false})}
+          style={{height: '100%', width: '100%'}}
+          onScroll={Animated.event([{nativeEvent: {contentOffset: {y: scrollY}}}], {
+            useNativeDriver: false,
+            listener: listenerScrollY,
+          })}
           scrollEventThrottle={16}>
           <Text style={styles.bigTitle}>{descr}</Text>
-          {todos.map((item) => (
-            <ListItem key={item.key} item={item} removeItem={removeItem} updateItem={updateItem} />
-          ))}
+          {Boolean(todos.length) ? (
+            todos.map((item) => <ListItem key={item.key} item={item} removeItem={removeItem} updateItem={updateItem} />)
+          ) : (
+            <Skeleton />
+          )}
         </Animated.ScrollView>
+        <Animated.View style={{transform: [{translateY: trans}], position: 'absolute', right: 16, bottom: 30}}>
+          <TouchableOpacity
+            onPress={() => console.log(5555)}
+            activeOpacity={1}
+            style={{
+              width: 60,
+              height: 60,
+              borderRadius: 30,
+              backgroundColor: '#7257D3',
+              justifyContent: 'center',
+              alignItems: 'center',
+
+              elevation: 24,
+            }}>
+            <MaterialCommunityIcons name="plus-box-multiple" color={'#FFFFFF'} size={25} />
+          </TouchableOpacity>
+        </Animated.View>
       </View>
     </View>
   )
